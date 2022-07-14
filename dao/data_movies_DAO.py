@@ -1,6 +1,6 @@
 import json
 
-from flask import request, jsonify
+from flask import request
 
 from dao.model.model_movie import Movie, Director, Genre
 from dao.model.schemas import movies_schema, director_schema, genre_schema
@@ -24,12 +24,29 @@ class MoviesDAO:
         result = movies_schema.dump(one_movie)
         return result
 
+    def get_movie_by_director(self, director_id):
+        """ Возвращает все фильмы режиссера """
+        movies = Movie.query.filter(Director.id == director_id).join(Movie.director).all()
+        result = movies_schema.dump(movies)
+        return result
+
+    def get_movie_by_genre(self, genre_id):
+        """ Возвращает все фильмы жанра """
+        movies = Movie.query.filter(Genre.id == genre_id).join(Movie.genre).all()
+        result = movies_schema.dump(movies)
+        return result
+
+    def get_movie_by_year(self, year):
+        """ Возвращает все фильмы за год """
+        movies = Movie.query.filter(Movie.year == year).all()
+        result = movies_schema.dump(movies)
+        return result
+
     def add_movies(self):
         """ Добавляет фильм методом POST """
         new_movies = Movie(**json.loads(request.data))
         db.session.add(new_movies)
         db.session.commit()
-
 
     def update_movie(self, pk):
         """ Обновляет данные о фильме методом PUT """
