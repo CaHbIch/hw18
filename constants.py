@@ -2,6 +2,6 @@
 # например вместо C:\\Windows в коде, создайте константу WINDOWS_PATH здесь и присвойте ей значение
 
 # Пример
-
+#
 # CONSTANT_NAME = "value"
 # LOG_DIR = "logs"
