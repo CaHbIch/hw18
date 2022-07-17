@@ -2,6 +2,7 @@ import json
 
 from flask import request
 
+
 from dao.model.model_movie import Movie, Director, Genre
 from dao.model.schemas import movies_schema, director_schema, genre_schema
 from setup_db import db

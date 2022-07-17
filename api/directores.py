@@ -1,4 +1,3 @@
-from flask import request
 from flask_restx import Resource, Namespace
 
 from implemented import movies_dao
