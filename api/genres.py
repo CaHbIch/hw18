@@ -1,17 +1,22 @@
 from flask_restx import Resource, Namespace
 
-from implemented import movies_dao
+from dao.model.genre import GenreSchema
+from implemented import genre_service
 
 genre_ns = Namespace('genres')
 
 
 @genre_ns.route("/")
-class MoviesView(Resource):
+class GenresView(Resource):
     def get(self):
-        return movies_dao.all_genre_movie(), 200
+        all_genre = genre_service.get_all()
+        result = GenreSchema(many=True).dump(all_genre)
+        return result, 200
 
 
-@genre_ns.route("/<int:pk>")
-class MoviesView(Resource):
+@genre_ns.route('/<int:pk>')
+class GenreView(Resource):
     def get(self, pk):
-        return movies_dao.get_one_genre(pk), 200
+        one_genre = genre_service.get_one(pk)
+        result = GenreSchema().dump(one_genre)
+        return result, 200

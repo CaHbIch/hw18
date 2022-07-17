@@ -1,17 +1,22 @@
 from flask_restx import Resource, Namespace
 
-from implemented import movies_dao
+from dao.model.director import DirectorSchema
+from implemented import director_service
 
 director_ns = Namespace('directors')
 
 
-@director_ns.route("/")
-class MoviesView(Resource):
+@director_ns.route('/')
+class DirectorsView(Resource):
     def get(self):
-        return movies_dao.all_director_movie(), 200
+        alL_directors = director_service.get_all()
+        result = DirectorSchema(many=True).dump(alL_directors)
+        return result, 200
 
 
-@director_ns.route("/<int:pk>")
-class MoviesView(Resource):
+@director_ns.route('/<int:pk>')
+class DirectorView(Resource):
     def get(self, pk):
-        return movies_dao.get_one_director(pk), 200
+        one_director = director_service.get_one(pk)
+        result = DirectorSchema().dump(one_director)
+        return result, 200

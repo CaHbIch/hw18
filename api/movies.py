@@ -1,9 +1,12 @@
+import json
+
 from flask import request
 from flask_restx import Resource, Namespace
 
-from implemented import movies_dao
+from dao.model.movie import MovieSchema
+from implemented import movie_service
 
-movies_ns = Namespace('movies/')
+movies_ns = Namespace('movies')
 
 
 @movies_ns.route("/")
@@ -12,28 +15,32 @@ class MoviesView(Resource):
         director_id = request.args.get("director_id", type=int)
         genre_id = request.args.get("genre_id", type=int)
         year = request.args.get("year", type=int)
-        if director_id:
-            return movies_dao.get_movie_by_director(director_id), 200
-        if genre_id:
-            return movies_dao.get_movie_by_genre(genre_id), 200
-        if year:
-            return movies_dao.get_movie_by_year(year), 200
-        return movies_dao.get_alL_movies(), 200
+        filters = {
+            "director_id": director_id,
+            "genre_id": genre_id,
+            "year": year,
+        }
+        all_movies = movie_service.get_all(filters)
+        result = MovieSchema(many=True).dump(all_movies)
+        return result, 200
 
     def post(self):
-        movies_dao.add_movies()
-        return f'Фильм добавлен', 201
+        req_json = json.loads(request.data)
+        add_movie = movie_service.create(req_json)
+        return f"Фильм {add_movie.title} добавлен ", 201, {"location": f"/movies/{add_movie.id}"}
 
 
 @movies_ns.route("/<int:pk>")
 class MoviesView(Resource):
     def get(self, pk):
-        return movies_dao.get_one_movie(pk), 200
+        one_movie = movie_service.get_one(pk)
+        one = MovieSchema().dump(one_movie)
+        return one, 200
 
     def put(self, pk):
-        movies_dao.update_movie(pk)
-        return f'Фильм обновлен', 204
+        movie_service.update(pk)
+        return "", 204
 
     def delete(self, pk):
-        movies_dao.delete_movie(pk)
-        return f'Фильм удален', 204
+        movie_service.delete(pk)
+        return "", 204
