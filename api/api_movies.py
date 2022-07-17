@@ -21,16 +21,20 @@ class MoviesView(Resource):
         return movies_dao.get_alL_movies(), 200
 
     def post(self):
-        return f'Фильм добавлен', movies_dao.add_movies(), 200
+        add_movies = movies_dao.add_movies()
+        return f'Фильм добавлен', add_movies, 200
 
 
 @movies_ns.route("/<int:pk>")
 class MoviesView(Resource):
     def get(self, pk):
-        return movies_dao.get_one_movie(pk), 200
+        one_movie = movies_dao.get_one_movie(pk)
+        return one_movie, 200
 
     def put(self, pk):
-        return f"Фильм обновлен", movies_dao.update_movie(pk), 200
+        update_movie = movies_dao.update_movie(pk)
+        return f"Фильм обновлен", update_movie, 200
 
     def delete(self, pk):
-        return f"Фильм удален", movies_dao.delete_movie(pk), 200
+        delete_movie = movies_dao.delete_movie(pk)
+        return f"Фильм удален", delete_movie, 200

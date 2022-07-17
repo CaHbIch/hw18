@@ -4,9 +4,9 @@ from flask_restx import Api
 from config import Config
 from setup_db import db
 
-from views.views_directores import director_ns
-from views.views_genres import genre_ns
-from views.views_movies import movies_ns
+from api.api_directores import director_ns
+from api.api_genres import genre_ns
+from api.api_movies import movies_ns
 
 
 def create_app(config_object):
@@ -31,9 +31,12 @@ def create_data(app, db):
     with app.app_context():
         db.create_all()
 
-
-app = create_app(Config())
-app.debug = True
+#         Здесь можно создать несколько сущностей чтобы добавить их в БД
+#
+#         with db.session.begin():
+#             db.session.add_all(здесь список созданных объектов)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app = create_app(Config())
+    app.debug = True
+    app.run(debug=False)
