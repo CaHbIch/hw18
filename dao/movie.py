@@ -45,8 +45,6 @@ class MovieDAO:
         updates_movie.update(movie)
         self.session.commit()
 
-
-
     def delete_movie(self, pk):
         """ Удаляет данные о фильме """
         movie = self.get_one_movie(pk)
